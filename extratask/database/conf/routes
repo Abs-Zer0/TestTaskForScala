@@ -8,3 +8,31 @@ GET     /                           controllers.HomeController.index
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
+# Add telephone number without parameters
+# Example -> curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"illyasviel\",\"number\":\"79xxx\"}" 127.0.0.1:9000/phones/createNewPhone
+POST /phones/createNewPhone controllers.TelBookController.addTel()
+
+# Add telephone number with parameters
+# Example -> curl -g -X POST 127.0.0.1:9000/phones/createNewPhone?data={\"name\":\"illyasviel\",\"number\":\"79xxx\"}
+# POST /phones/createNewPhone controllers.TelBookController.addTel(data: String)
+
+# Get all telephone numbers
+# Example -> curl -X GET 127.0.0.1:9000/phones
+GET /phones controllers.TelBookController.getAllTel()
+
+# Change name or telephone number by "id"
+# Example -> curl -X POST -H "Content-Type: application/json" -d "{\"name\":\"test\",\"number\":\"89xxx\"}" 127.0.0.1:9000/phone/2
+POST /phone/:id controllers.TelBookController.changeNumberOrName(id: Int)
+
+# Delete from book telephone number by "id"
+# Example -> curl -X DELETE 127.0.0.1:9000/phone/2
+DELETE /phone/:id controllers.TelBookController.deleteTel(id: Int)
+
+# Search note by substring of name
+# Example -> curl -X GET 127.0.0.1:9000/phones/searchByName?name=illya
+GET /phones/searchByName controllers.TelBookController.searchByName(name: String)
+
+# Search note by substring of name
+# Example -> curl -X GET 127.0.0.1:9000/phones/searchByNumber?number=795
+GET /phones/searchByNumber controllers.TelBookController.searchByNumber(number: String)
