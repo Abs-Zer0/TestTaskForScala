@@ -1,0 +1,33 @@
+@(operation: String, form: Form[Phone.Phone], postUrl: Call)(implicit request: MessagesRequestHeader)
+
+@main(operation + " запись") {
+
+<div class="container">
+
+    <h1>@operation запись в телефонном справочнике</h1>
+
+    <a class="btn back_btn" href="@routes.PhonebookController.getAllPhones">Назад</a>
+
+    @* Global errors are not tied to any particular form field *@
+    @if(form.hasGlobalErrors) {
+    @form.globalErrors.map { error: FormError =>
+    <div>
+        @error.key: @error.message
+    </div>
+    }
+    }
+
+    @helper.form(postUrl) {
+    @helper.CSRF.formField
+
+    @* @helper.inputText(form("id"), '_Label -> "0", 'hidden -> "true") *@
+    <input type="hidden" name="id" value="0" />
+    <label>Имя</label>
+    <input name="name" value="" />
+    <label>Номер телефона</label>
+    <input name="number" value="" />
+
+    <button>@operation</button>
+    }
+</div>
+}

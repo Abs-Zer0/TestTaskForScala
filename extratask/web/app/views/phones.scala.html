@@ -1,0 +1,60 @@
+@(phonebook: Seq[Phone.Phone], form: Form[Phone.Phone], name: String = "", number: String = "")(implicit request: MessagesRequestHeader)
+
+@main("Справочник") {
+
+<div class="container">
+
+    <h1><a class="title" href="@routes.PhonebookController.getAllPhones">Телефонный справочник</a></h1>
+
+    @* Flash shows updates to a page *@
+    @request.flash.data.map { case (name, value) =>
+        <div class="result">@name: @value</div>
+    }
+
+    @* Global errors are not tied to any particular form field *@
+    @if(form.hasGlobalErrors) {
+        @form.globalErrors.map { error: FormError =>
+            <div>
+                @error.key: @error.message
+            </div>
+        }
+    }
+
+    <div class="inline_block">
+        <a class="btn add_btn" href="@routes.PhonebookController.createPhone">Добавить запись</a>
+
+        @helper.form(routes.PhonebookController.searchPhone) {
+            @helper.CSRF.formField
+
+            <input type="hidden" name="id" value="0" />
+            <label>Имя</label>
+            <input name="name" value="@name" />
+            <label>Номер телефона</label>
+            <input name="number" value="@number" />
+
+            <button>Найти</button>
+        }
+    </div>
+
+    <table>
+        <thead>
+            <th class="id_col">id</th>
+            <th>Имя</th>
+            <th>Номер телефона</th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tbody>
+        @for(phone <- phonebook) {
+        <tr>
+            <td class="id_col">@phone.id</td>
+            <td>@phone.name</td>
+            <td>@phone.number</td>
+            <td class="change_col"><a class="btn change_btn" href="@routes.PhonebookController.changeNumberOrName(phone.id)">Изменить</a></td>
+            <td class="del_col"><a class="btn del_btn" href="@routes.PhonebookController.deletePhone(phone.id)">Удалить</a></td>
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>
+}
